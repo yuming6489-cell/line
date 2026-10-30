@@ -1,278 +1,282 @@
-
 <!DOCTYPE html>
-<html lang="zh-Hant">
+<html lang="en">
+
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport"
-        content="width=device-width, initial-scale=1.0">
-  <title>IZO 萬粉健康應援祭｜分享好友</title>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Maso的萬事屋LINEBOT範例</title>
+    <script src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.0.0/jquery.min.js"></script>
+    <script>
+        //==========================LIFF API初始化================================
+        $(document).ready(function() {
+            liff.init({
+                liffId: "2012024073-Q0e1IQBp"
+            });
+        });
+        //==========================LIFF API初始化================================
 
-  <!-- LINE LIFF SDK -->
-  <script
-    src="https://static.line-scdn.net/liff/edge/2/sdk.js">
-  </script>
+        function liff_getOS() {
+            var OS = liff.getOS();
+            alert(OS);
+        }
 
-  <style>
-    * { box-sizing: border-box; }
+        function liff_getLanguage() {
+            var Language = liff.getLanguage();
+            alert(Language);
+        }
 
-    body {
-      margin: 0;
-      font-family: Arial, "Noto Sans TC", sans-serif;
-      background: #f3f7fa;
-      color: #22374c;
-      text-align: center;
-    }
+        function liff_getVersion() {
+            var Version = liff.getVersion();
+            alert(Version);
+        }
 
-    .container {
-      max-width: 430px;
-      margin: 40px auto;
-      padding: 30px 22px;
-      background: white;
-      border-radius: 18px;
-      box-shadow: 0 6px 22px #22374c14;
-    }
+        function liff_getLineVersion() {
+            var LineVersion = liff.getLineVersion();
+            alert(LineVersion);
+        }
 
-    h1 { font-size: 25px; }
-    p { line-height: 1.8; }
+        function liff_isInClient() {
+            var InClient = liff.isInClient();
+            if (InClient != true) {
+                alert("未使用LIFF瀏覽器");
+            } else {
+                alert("已使用LIFF瀏覽器");
+            }
+        }
 
-    .share-btn {
-      display: block;
-      width: 100%;
-      background: #06c755;
-      color: white;
-      border: none;
-      padding: 16px;
-      font-size: 18px;
-      font-weight: bold;
-      border-radius: 10px;
-      cursor: pointer;
-      margin-top: 25px;
-    }
+        function liff_isLoggedIn() {
+            var isLoggedIn = liff.isLoggedIn();
+            if (isLoggedIn != true) {
+                alert("未登入LINE");
+            } else {
+                alert("已登入LINE");
+            }
+        }
 
-    .share-btn:disabled {
-      opacity: 0.5;
-      cursor: not-allowed;
-    }
+        function liff_login() {
+            liff.login({
+                redirectUri: "https://maso-personal.herokuapp.com/",
+            });
+        }
 
-    #status {
-      margin-top: 18px;
-      font-size: 14px;
-      white-space: pre-line;
-    }
-  </style>
+        function liff_logout() {
+            liff.logout();
+        }
+
+        function liff_getAccessToken() {
+            var accessToken = liff.getAccessToken();
+            alert(accessToken);
+        }
+
+        function liff_getIDToken() {
+            var IDToken = liff.getIDToken();
+            alert(IDToken);
+        }
+
+        function liff_getDecodedIDToken() {
+            var DecodedIDToken = JSON.stringify(liff.getDecodedIDToken());
+            alert(DecodedIDToken);
+        }
+
+        function liff_getContext() {
+            var Context = JSON.stringify(liff.getContext());
+            alert(Context);
+        }
+
+        function liff_getProfile() {
+            liff
+                .getProfile()
+                .then((profile) => {
+                    alert(JSON.stringify(profile));
+                })
+                .catch((err) => {
+                    console.log("error", err);
+                });
+        }
+
+        function liff_getFriendship() {
+            var Friendship = liff.getFriendship();
+            alert(Friendship);
+        }
+
+        function liff_sendMessages() {
+            liff.sendMessages([{
+                type: "text",
+                text: "這一則訊息是來自LIFF網頁",
+            }, ]);
+            alert("LIFF傳送訊息");
+        }
+
+        function liff_openWindow() {
+            // window.location.replace("https://developers.line.biz/en/reference/liff/")
+            liff.openWindow({
+                url: "https://developers.line.biz/en/reference/liff/",
+                external: true,
+            });
+        }
+
+        function liff_closeWindow() {
+            liff.closeWindow();
+        }
+
+        function liff_shareTargetPicker() {
+            liff.shareTargetPicker(
+                [{
+                    type: "image",
+                    originalContentUrl: "https://pic.pimg.tw/saryh777/1641637885-2419307650-g_n.png",
+                    previewImageUrl: "https://pic.pimg.tw/saryh777/1641637885-2419307650-g_n.png",
+                }, ], {
+                    isMultiple: true,
+                }
+            );
+        }
+
+        function liff_LINE_Card() {
+            liff.shareTargetPicker(
+                [{
+                    type: "flex",
+                    altText: "Maso的LINE名片",
+                    contents: {
+                        "type": "carousel",
+                        "contents": [{
+                            "type": "bubble",
+                            "hero": {
+                                "type": "image",
+                                "url": "https://i.imgur.com/ZuRTzVj.png",
+                                "aspectRatio": "8:9",
+                                "size": "full"
+                            },
+                            "body": {
+                                "type": "box",
+                                "layout": "vertical",
+                                "contents": [{
+                                    "type": "box",
+                                    "layout": "vertical",
+                                    "contents": [{
+                                        "type": "text",
+                                        "text": "◈ 我發現了一把鏟子\n\n某天，因為朋友在LINE群組中加入了一個聊天機器人，原本只是想要搜尋還有哪些聊天機器人好用的我，卻意外地發現了一些如何製作聊天機器人的教學文章。\n\n在懵懵懂懂的情況下，我發現了這把名為程式尋寶的鏟子，從那時候起我開啟了這趟發掘可能性的旅程…\n\n",
+                                        "wrap": true
+                                    }],
+                                    "height": "280px",
+                                    "maxHeight": "400px"
+                                }, {
+                                    "type": "box",
+                                    "layout": "vertical",
+                                    "contents": [{
+                                        "type": "button",
+                                        "action": {
+                                            "type": "uri",
+                                            "label": "❖看看我挖到什麼",
+                                            "uri": "https://www.youtube.com/channel/UCpzVAEwEs9AwT2uAOZuxaRQ"
+                                        },
+                                        "style": "secondary",
+                                        "color": "#B5EAEF"
+                                    }]
+                                }]
+                            }
+                        }, {
+                            "type": "bubble",
+                            "hero": {
+                                "type": "image",
+                                "url": "https://i.imgur.com/tCGgamM.png",
+                                "size": "full",
+                                "aspectRatio": "8:9"
+                            },
+                            "body": {
+                                "type": "box",
+                                "layout": "vertical",
+                                "contents": [{
+                                    "type": "box",
+                                    "layout": "vertical",
+                                    "contents": [{
+                                        "type": "text",
+                                        "text": "◈ 坑越挖越大洞啦\n\n沒錯，踏上這條不歸路的人們都懂得，手上的這把鏟子是一個會讓你深陷越大越大的坑洞之中，沒有終止的一天的可怕工具，但在我回過神來的時候，才發現自己已癡迷於探索它所帶來的無限知識寶藏，你可以說我是個打字的，也可以說我是個挖坑的，坑都挖好了，準備好要一起跳進去了嗎？\n\n",
+                                        "wrap": true
+                                    }],
+                                    "height": "280px",
+                                    "maxHeight": "400px"
+                                }, {
+                                    "type": "box",
+                                    "layout": "vertical",
+                                    "contents": [{
+                                        "type": "button",
+                                        "action": {
+                                            "type": "uri",
+                                            "label": "❖訂閱Maso的萬事屋",
+                                            "uri": "https://www.youtube.com/channel/UCpzVAEwEs9AwT2uAOZuxaRQ?sub_confirmation=1"
+                                        },
+                                        "style": "secondary",
+                                        "color": "#B5EAEF"
+                                    }]
+                                }]
+                            }
+                        }]
+                    }
+                }], {
+                    isMultiple: true,
+                }
+            );
+        }
+
+        function liff_isApiAvailable() {
+            var apiName = "shareTargetPicker";
+            var isApiAvailable = liff.isApiAvailable(apiName);
+            if (isApiAvailable != true) {
+                alert("無法使用" + apiName + " API");
+            } else {
+                alert("可以使用" + apiName + " API");
+            }
+        }
+    </script>
+    <style>
+        h1 {
+            width: 80%;
+            height: 40px;
+            margin-left: 10%;
+        }
+        
+        button {
+            width: 80%;
+            height: 40px;
+            margin-left: 10%;
+            background-color: #c9e8e3;
+            font-weight: 600;
+        }
+    </style>
 </head>
 
 <body>
-  <main class="container">
-    <h1>愛大屁屁</h1>
-    <p>
-      邀請婉茹小屁屁參加<br>
-      每天幫屁屁按摩<br>
-      挑戰讓屁屁睡著
-    </p>
-
-    <button
-      id="shareBtn"
-      class="share-btn"
-      onclick="shareToFriends()"
-      disabled>
-      初始化中...
-    </button>
-
-    <div id="status" role="status" aria-live="polite">
-      正在連線 LINE...
-    </div>
-  </main>
-
-  <script>
-    // ===== 請修改以下設定 =====
-
-    const LIFF_ID = "2012024073-Q0e1IQBp";
-
-    // 換成真正公開的活動網址
-    const ACTIVITY_URL = "https://liff.line.me/2012024073-Q0e1IQBp";
-
-    // ===== LIFF 初始化 =====
-
-    const shareBtn = document.getElementById("shareBtn");
-    const statusEl = document.getElementById("status");
-
-    let initialized = false;
-
-    function setStatus(message) {
-      statusEl.textContent = message;
-    }
-
-    async function initializeLIFF() {
-      try {
-        await liff.init({ liffId: LIFF_ID });
-        initialized = true;
-
-        // 外部瀏覽器需登入 LINE
-        if (!liff.isLoggedIn()) {
-          shareBtn.disabled = false;
-          shareBtn.textContent = "使用 LINE 登入";
-          setStatus("請先登入 LINE");
-          return;
-        }
-
-        // 檢查 Share Target Picker 是否可用
-        if (!liff.isApiAvailable("shareTargetPicker")) {
-          shareBtn.disabled = true;
-          shareBtn.textContent = "目前無法分享";
-          setStatus("此環境不支援 LINE 好友分享功能");
-          return;
-        }
-
-        shareBtn.disabled = false;
-        shareBtn.textContent = "分享給 LINE 好友";
-        setStatus("已準備完成，請點擊分享");
-
-      } catch (error) {
-        console.error("LIFF 初始化失敗", error);
-        setStatus("LIFF 初始化失敗：" + error.message);
-        shareBtn.textContent = "初始化失敗";
-      }
-    }
-
-    // ===== Flex Message 卡片 =====
-
-    function createFlexMessage() {
-      return {
-        type: "flex",
-        altText: "IZO 萬粉健康應援祭，邀請你一起參加！",
-        contents: {
-          type: "bubble",
-          size: "mega",
-          header: {
-            type: "box",
-            layout: "vertical",
-            backgroundColor: "#22374C",
-            paddingAll: "22px",
-            contents: [
-              {
-                type: "text",
-                text: "IZO 昊霖預防醫學機構",
-                color: "#A9DEFA",
-                size: "sm"
-              },
-              {
-                type: "text",
-                text: "萬粉健康應援祭",
-                weight: "bold",
-                size: "xl",
-                color: "#FFFFFF",
-                margin: "md",
-                wrap: true
-              },
-              {
-                type: "text",
-                text: "健康好禮週週抽！",
-                color: "#FFFFFF",
-                size: "md",
-                margin: "sm"
-              }
-            ]
-          },
-
-          body: {
-            type: "box",
-            layout: "vertical",
-            paddingAll: "22px",
-            spacing: "md",
-            contents: [
-              {
-                type: "text",
-                text: "每週抽出 3 位幸運兒",
-                size: "lg",
-                weight: "bold",
-                color: "#22374C"
-              },
-              {
-                type: "text",
-                text: "邀請好友一起參加健康互動活動，挑戰 10,000 粉絲終極大獎！",
-                size: "sm",
-                wrap: true,
-                color: "#555555"
-              },
-              {
-                type: "separator",
-                margin: "md"
-              },
-              {
-                type: "text",
-                text: "每週健康主題 × 好友互動 × 抽獎好禮",
-                size: "sm",
-                wrap: true,
-                color: "#218EC9"
-              }
-            ]
-          },
-
-          footer: {
-            type: "box",
-            layout: "vertical",
-            paddingAll: "15px",
-            contents: [
-              {
-                type: "button",
-                style: "primary",
-                color: "#06C755",
-                action: {
-                  type: "uri",
-                  label: "立即參加活動",
-                  uri: ACTIVITY_URL
-                }
-              }
-            ]
-          }
-        }
-      };
-    }
-
-    // ===== 一鍵分享好友 =====
-
-    async function shareToFriends() {
-      if (!initialized) {
-        setStatus("LINE 尚未初始化");
-        return;
-      }
-
-      if (!liff.isLoggedIn()) {
-        liff.login({ redirectUri: window.location.href });
-        return;
-      }
-
-      if (!liff.isApiAvailable("shareTargetPicker")) {
-        setStatus("此環境不支援分享功能");
-        return;
-      }
-
-      shareBtn.disabled = true;
-      setStatus("正在開啟好友選擇介面...");
-
-      try {
-        const result = await liff.shareTargetPicker(
-          [createFlexMessage()],
-          { isMultiple: true }
-        );
-
-        if (result) {
-          setStatus("已完成 LINE 分享流程");
-        } else {
-          setStatus("分享視窗已關閉，請確認是否送出");
-        }
-
-      } catch (error) {
-        console.error("分享失敗", error);
-        setStatus("分享失敗：" + error.message);
-      } finally {
-        shareBtn.disabled = false;
-      }
-    }
-
-    // 開啟頁面後初始化
-    initializeLIFF();
-  </script>
+    <h1>Maso的萬事屋</h1>
+    <h1>LIFF API測試範例：</h1>
+    <h1></h1>
+    <button onclick="liff_getOS()">顯示使用者作業系統</button><br /><br />
+    <button onclick="liff_getLanguage()">顯示使用者語言</button><br /><br />
+    <button onclick="liff_getVersion()">顯示LIFF SDK版本</button><br /><br />
+    <button onclick="liff_getLineVersion()">顯示LINE版本</button><br /><br />
+    <button onclick="liff_isInClient()">顯示是否在LIFF瀏覽器內</button
+    ><br /><br />
+    <button onclick="liff_isLoggedIn()">顯示是否登入LINE</button><br /><br />
+    <button onclick="liff_login()">登入LINE</button><br /><br />
+    <button onclick="liff_logout()">登出LINE</button><br /><br />
+    <button onclick="liff_isApiAvailable()">
+      顯示是否此網頁可用liff.shareTargetPicker() API</button
+    ><br /><br />
+    <button onclick="liff_getAccessToken()">獲得用戶accessToken</button
+    ><br /><br />
+    <button onclick="liff_getIDToken()">獲得用戶IDToken</button><br /><br />
+    <button onclick="liff_getDecodedIDToken()">獲得用戶DecodedIDToken</button
+    ><br /><br />
+    <button onclick="liff_getContext()">獲得啟動LIFF網頁來源的背景資訊</button
+    ><br /><br />
+    <button onclick="liff_getProfile()">獲得使用者資訊</button><br /><br />
+    <button onclick="liff_sendMessages()">傳送訊息</button><br /><br />
+    <button onclick="liff_openWindow()">開啟新視窗</button><br /><br />
+    <button onclick="liff_closeWindow()">關閉新視窗</button><br /><br />
+    <button onclick="liff_shareTargetPicker()">分享指定訊息</button><br /><br />
+    <button onclick="liff_LINE_Card()">傳送LINE名片</button><br /><br />
+    <br /><br />
 </body>
+
 </html>
