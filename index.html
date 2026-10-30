@@ -5,7 +5,7 @@
   <meta charset="UTF-8">
   <meta name="viewport"
         content="width=device-width, initial-scale=1">
-  <title>IZO LINE 好友分享</title>
+  <title>名片好友分享</title>
 
   <style>
     * { box-sizing: border-box; }
@@ -51,8 +51,6 @@
     }
 
     #btnShare { background: #06c755; }
-    #btnShare2 { background: #218ec9; }
-    #btnShare3 { background: #22374c; }
     #btnLogin { background: #06c755; }
     #btnLogOut { background: #64748b; }
 
@@ -70,10 +68,11 @@
 
 <body>
   <div class="container">
-    <h1>好友分享中心</h1>
+    <h1>IZO 好友分享中心</h1>
     <p>點選下方按鈕，將圖文卡片分享給 LINE 好友</p>
 
-    <button id="btnShare" disabled>名片分享</button>
+    <button id="btnShare" disabled>電子名片分享</button>
+
 
     <hr>
 
@@ -197,157 +196,61 @@
 
     function createFlexMessage(title, description, imageUrl) {
       return {
-  "type": "bubble",
-  "hero": {
-    "type": "image",
-    "url": "https://developers-resource.landpress.line.me/fx/img/01_1_cafe.png",
-    "size": "full",
-    "aspectRatio": "20:13",
-    "aspectMode": "cover",
-    "action": {
-      "type": "uri",
-      "uri": "https://line.me/"
+        type: "flex",
+        altText: title,
+        contents: {
+          type: "bubble",
+
+          hero: {
+            type: "image",
+            url: imageUrl,
+            size: "full",
+            aspectRatio: "2:1",
+            aspectMode: "cover"
+          },
+
+          body: {
+            type: "box",
+            layout: "vertical",
+            spacing: "md",
+            contents: [
+              {
+                type: "text",
+                text: title,
+                weight: "bold",
+                size: "xl",
+                color: "#22374C",
+                wrap: true
+              },
+              {
+                type: "text",
+                text: description,
+                size: "sm",
+                color: "#64748B",
+                wrap: true
+              }
+            ]
+          },
+
+          footer: {
+            type: "box",
+            layout: "vertical",
+            contents: [
+              {
+                type: "button",
+                style: "primary",
+                color: "#218EC9",
+                action: {
+                  type: "uri",
+                  label: "立即了解",
+                  uri: CONFIG.targetUrl
+                }
+              }
+            ]
+          }
+        }
+      };
     }
-  },
-  "body": {
-    "type": "box",
-    "layout": "vertical",
-    "contents": [
-      {
-        "type": "text",
-        "text": "Brown Cafe",
-        "weight": "bold",
-        "size": "xl"
-      },
-      {
-        "type": "box",
-        "layout": "baseline",
-        "margin": "md",
-        "contents": [
-          {
-            "type": "icon",
-            "size": "sm",
-            "url": "https://developers-resource.landpress.line.me/fx/img/review_gold_star_28.png"
-          },
-          {
-            "type": "icon",
-            "size": "sm",
-            "url": "https://developers-resource.landpress.line.me/fx/img/review_gold_star_28.png"
-          },
-          {
-            "type": "icon",
-            "size": "sm",
-            "url": "https://developers-resource.landpress.line.me/fx/img/review_gold_star_28.png"
-          },
-          {
-            "type": "icon",
-            "size": "sm",
-            "url": "https://developers-resource.landpress.line.me/fx/img/review_gold_star_28.png"
-          },
-          {
-            "type": "icon",
-            "size": "sm",
-            "url": "https://developers-resource.landpress.line.me/fx/img/review_gray_star_28.png"
-          },
-          {
-            "type": "text",
-            "text": "4.0",
-            "size": "sm",
-            "color": "#999999",
-            "margin": "md",
-            "flex": 0
-          }
-        ]
-      },
-      {
-        "type": "box",
-        "layout": "vertical",
-        "margin": "lg",
-        "spacing": "sm",
-        "contents": [
-          {
-            "type": "box",
-            "layout": "baseline",
-            "spacing": "sm",
-            "contents": [
-              {
-                "type": "text",
-                "text": "Place",
-                "color": "#aaaaaa",
-                "size": "sm",
-                "flex": 1
-              },
-              {
-                "type": "text",
-                "text": "Flex Tower, 7-7-4 Midori-ku, Tokyo",
-                "wrap": true,
-                "color": "#666666",
-                "size": "sm",
-                "flex": 5
-              }
-            ]
-          },
-          {
-            "type": "box",
-            "layout": "baseline",
-            "spacing": "sm",
-            "contents": [
-              {
-                "type": "text",
-                "text": "Time",
-                "color": "#aaaaaa",
-                "size": "sm",
-                "flex": 1
-              },
-              {
-                "type": "text",
-                "text": "10:00 - 23:00",
-                "wrap": true,
-                "color": "#666666",
-                "size": "sm",
-                "flex": 5
-              }
-            ]
-          }
-        ]
-      }
-    ]
-  },
-  "footer": {
-    "type": "box",
-    "layout": "vertical",
-    "spacing": "sm",
-    "contents": [
-      {
-        "type": "button",
-        "style": "link",
-        "height": "sm",
-        "action": {
-          "type": "uri",
-          "label": "CALL",
-          "uri": "https://line.me/"
-        }
-      },
-      {
-        "type": "button",
-        "style": "link",
-        "height": "sm",
-        "action": {
-          "type": "uri",
-          "label": "WEBSITE",
-          "uri": "https://line.me/"
-        }
-      },
-      {
-        "type": "box",
-        "layout": "vertical",
-        "contents": [],
-        "margin": "sm"
-      }
-    ],
-    "flex": 0
-  }
-}
 
     // =====================================
     // ★ 5. 分享功能
