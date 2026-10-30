@@ -5,61 +5,63 @@
   <meta charset="UTF-8">
   <meta name="viewport"
         content="width=device-width, initial-scale=1">
-  <title>LINE 電子名片分享</title>
+  <title>IZO LINE 好友分享</title>
 
   <style>
-    * {
-      box-sizing: border-box;
-    }
+    * { box-sizing: border-box; }
 
     body {
       margin: 0;
-      padding: 30px 15px;
+      padding: 32px 16px;
+      background: #f1f7fa;
       font-family: Arial, "Microsoft JhengHei", sans-serif;
-      background: #f2f7fa;
-      text-align: center;
-    }
-
-    .container {
-      max-width: 420px;
-      margin: 30px auto;
-      padding: 30px 20px;
-      background: white;
-      border-radius: 18px;
-      box-shadow: 0 5px 25px #00000012;
-    }
-
-    h2 {
       color: #22374c;
     }
 
-    p {
-      color: #64748b;
-      line-height: 1.7;
+    .container {
+      max-width: 430px;
+      margin: auto;
+      padding: 26px 20px;
+      background: white;
+      border-radius: 18px;
+      box-shadow: 0 6px 24px #22374c18;
+      text-align: center;
     }
+
+    h1 { font-size: 24px; }
+    p { color: #64748b; line-height: 1.7; }
 
     button {
       display: block;
       width: 100%;
-      margin: 22px auto;
-      padding: 18px;
-      border: none;
+      padding: 17px;
+      margin: 14px 0;
+      border: 0;
       border-radius: 12px;
-      background: #06c755;
+      background: #218ec9;
       color: white;
-      font-size: 18px;
+      font-size: 17px;
       font-weight: bold;
       cursor: pointer;
     }
 
     button:disabled {
-      background: #aab7bd;
+      background: #a6b7c3;
       cursor: not-allowed;
     }
 
+    #btnShare { background: #06c755; }
+    #btnShare2 { background: #218ec9; }
+    #btnShare3 { background: #22374c; }
+    #btnLogin { background: #06c755; }
+    #btnLogOut { background: #64748b; }
+
     #status {
+      margin-top: 18px;
+      padding: 12px;
+      border-radius: 9px;
+      background: #edf5fa;
       font-size: 14px;
-      color: #64748b;
       white-space: pre-wrap;
       overflow-wrap: anywhere;
     }
@@ -67,229 +69,392 @@
 </head>
 
 <body>
-
   <div class="container">
-    <h2>IZO 電子名片</h2>
+    <h1>好友分享中心</h1>
+    <p>點選下方按鈕，將圖文卡片分享給 LINE 好友</p>
 
-    <p>點擊下方按鈕<br>分享電子名片給 LINE 好友</p>
+    <button id="btnShare" disabled>名片分享</button>
 
-    <button id="shareBtn" disabled>
-      分享 LINE 電子名片給好友
-    </button>
+    <hr>
 
-    <p id="status">正在初始化 LINE...</p>
+    <button id="btnLogin" hidden>LINE 登入</button>
+    <button id="btnLogOut" hidden>LINE 登出</button>
+
+    <div id="status" role="status" aria-live="polite">
+      LIFF 初始化中...
+    </div>
   </div>
 
-  <!-- LINE LIFF SDK -->
+  <!-- LINE 官方 LIFF SDK -->
   <script src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
 
   <script>
+    // =====================================
+    // ★ 1. 自訂設定區：修改這三個項目
+    // =====================================
 
-    // ==========================================
-    // 【設定區 1】填入你的 LIFF ID
-    // ==========================================
+    const CONFIG = {
+      // 改為你的 LIFF ID
+      liffId: "2012024073-Q0e1IQBp",
 
-    const LIFF_ID = "2012024073-Q0e1IQBp";
+      // 分享卡片的按鈕網址
+      targetUrl: "https://izohc.com.tw/",
 
-
-    // ==========================================
-    // 【設定區 2】★★★ 貼上你的名片 JSON ★★★
-    //
-    // 可將以下 CARD_JSON 整段替換成
-    // LINE Flex Message Simulator 的 JSON
-    //
-    // 支援：
-    // A. 完整訊息：
-    //    { "type": "flex", "altText": "...",
-    //      "contents": {...} }
-    //
-    // B. 純 Bubble / Carousel：
-    //    { "type": "bubble", ... }
-    //
-    // ==========================================
-
-    const CARD_JSON = {
-
-      "type": "flex",
-      "altText": "IZO昊霖預防醫學機構電子名片",
-
-      "contents": {
-        "type": "bubble",
-
-        "body": {
-          "type": "box",
-          "layout": "vertical",
-          "spacing": "md",
-          "contents": [
-            {
-              "type": "text",
-              "text": "IZO 昊霖預防醫學機構",
-              "weight": "bold",
-              "size": "xl",
-              "color": "#22374C",
-              "wrap": true
-            },
-            {
-              "type": "text",
-              "text": "專業預防醫學・健康管理",
-              "size": "sm",
-              "color": "#218EC9",
-              "wrap": true
-            },
-            {
-              "type": "separator",
-              "margin": "lg"
-            },
-            {
-              "type": "text",
-              "text": "歡迎了解我們的健康管理服務",
-              "size": "sm",
-              "color": "#666666",
-              "wrap": true
-            }
-          ]
-        },
-
-        "footer": {
-          "type": "box",
-          "layout": "vertical",
-          "contents": [
-            {
-              "type": "button",
-              "style": "primary",
-              "color": "#218EC9",
-              "action": {
-                "type": "uri",
-                "label": "前往官方網站",
-                "uri": "https://izohc.com.tw/"
-              }
-            }
-          ]
-        }
-      }
-
+      // 圖片網址：需為公開 HTTPS 圖片
+      imageBase: "https://placehold.co"
     };
 
-    // ==========================================
-    // 【設定區結束】
-    // 以下程式不用修改
-    // ==========================================
+    const $ = (id) => document.getElementById(id);
 
-    const shareBtn = document.getElementById("shareBtn");
-    const statusText = document.getElementById("status");
+    const shareButtons = [
+      $("btnShare"),
+      $("btnShare2"),
+      $("btnShare3")
+    ];
 
     function setStatus(message) {
-      statusText.textContent = message;
+      $("status").textContent = message;
     }
 
-    // 將 JSON 轉成 LINE Flex Message
-    function getFlexMessage() {
-
-      if (!CARD_JSON || typeof CARD_JSON !== "object") {
-        throw new Error("名片 JSON 格式不正確");
-      }
-
-      // 完整 Flex Message
-      if (CARD_JSON.type === "flex") {
-        if (!CARD_JSON.contents) {
-          throw new Error("Flex Message 缺少 contents");
-        }
-        return CARD_JSON;
-      }
-
-      // 純 Bubble / Carousel
-      if (
-        CARD_JSON.type === "bubble" ||
-        CARD_JSON.type === "carousel"
-      ) {
-        return {
-          type: "flex",
-          altText: "電子名片分享",
-          contents: CARD_JSON
-        };
-      }
-
-      throw new Error(
-        "請貼上完整 Flex Message 或 Bubble / Carousel JSON"
-      );
+    function setShareEnabled(enabled) {
+      shareButtons.forEach(btn => {
+        btn.disabled = !enabled;
+      });
     }
 
-    // LIFF 初始化
+    // =====================================
+    // ★ 2. LIFF 初始化
+    // =====================================
+
     async function initializeLiff() {
+      setShareEnabled(false);
+
+      if (
+        !CONFIG.liffId ||
+        CONFIG.liffId === "2012024073-Q0e1IQBp"
+      ) {
+        setStatus("請先在 CONFIG 填入 LIFF ID");
+        return;
+      }
 
       try {
-
-        if (
-          !LIFF_ID ||
-          LIFF_ID === "請填入你的LIFF_ID"
-        ) {
-          setStatus("請先填入 LIFF ID");
-          return;
-        }
-
         await liff.init({
-          liffId: LIFF_ID
+          liffId: CONFIG.liffId
         });
 
-        // 尚未登入時，外部瀏覽器導向 LINE 登入
-        if (!liff.isLoggedIn()) {
-          setStatus("正在前往 LINE 登入...");
-          liff.login({
-            redirectUri: window.location.href
-          });
-          return;
-        }
+        updateLoginButtons();
 
-        if (!liff.isApiAvailable("shareTargetPicker")) {
-          setStatus("目前環境不支援 LINE 好友分享");
-          return;
+        if (liff.isLoggedIn()) {
+          setShareEnabled(true);
+          setStatus("LINE 已登入，可以分享給好友");
+        } else {
+          setStatus("請先點擊 LINE 登入");
         }
-
-        shareBtn.disabled = false;
-        setStatus("可以分享電子名片");
 
       } catch (error) {
         console.error(error);
-        setStatus("初始化失敗：" + error.message);
+        setStatus(
+          "LIFF 初始化失敗：" +
+          (error.message || String(error))
+        );
       }
     }
 
-    // 分享電子名片
-    async function shareBusinessCard() {
+    // =====================================
+    // ★ 3. 登入與登出
+    // =====================================
 
-      shareBtn.disabled = true;
+    function updateLoginButtons() {
+      const loggedIn = liff.isLoggedIn();
+
+      $("btnLogin").hidden = loggedIn;
+      $("btnLogOut").hidden = !loggedIn;
+
+      // LINE 內建 LIFF 瀏覽器不提供登出按鈕
+      if (liff.isInClient()) {
+        $("btnLogOut").hidden = true;
+      }
+    }
+
+    function login() {
+      if (!liff.isLoggedIn()) {
+        liff.login();
+      }
+    }
+
+    function logOut() {
+      if (liff.isLoggedIn()) {
+        liff.logout();
+        updateLoginButtons();
+        setShareEnabled(false);
+        setStatus("已登出，請重新登入");
+      }
+    }
+
+    // =====================================
+    // ★ 4. Flex Message JSON 圖文卡片
+    // =====================================
+
+    function createFlexMessage(title, description, imageUrl) {
+      return {
+  "type": "bubble",
+  "hero": {
+    "type": "image",
+    "url": "https://developers-resource.landpress.line.me/fx/img/01_1_cafe.png",
+    "size": "full",
+    "aspectRatio": "20:13",
+    "aspectMode": "cover",
+    "action": {
+      "type": "uri",
+      "uri": "https://line.me/"
+    }
+  },
+  "body": {
+    "type": "box",
+    "layout": "vertical",
+    "contents": [
+      {
+        "type": "text",
+        "text": "Brown Cafe",
+        "weight": "bold",
+        "size": "xl"
+      },
+      {
+        "type": "box",
+        "layout": "baseline",
+        "margin": "md",
+        "contents": [
+          {
+            "type": "icon",
+            "size": "sm",
+            "url": "https://developers-resource.landpress.line.me/fx/img/review_gold_star_28.png"
+          },
+          {
+            "type": "icon",
+            "size": "sm",
+            "url": "https://developers-resource.landpress.line.me/fx/img/review_gold_star_28.png"
+          },
+          {
+            "type": "icon",
+            "size": "sm",
+            "url": "https://developers-resource.landpress.line.me/fx/img/review_gold_star_28.png"
+          },
+          {
+            "type": "icon",
+            "size": "sm",
+            "url": "https://developers-resource.landpress.line.me/fx/img/review_gold_star_28.png"
+          },
+          {
+            "type": "icon",
+            "size": "sm",
+            "url": "https://developers-resource.landpress.line.me/fx/img/review_gray_star_28.png"
+          },
+          {
+            "type": "text",
+            "text": "4.0",
+            "size": "sm",
+            "color": "#999999",
+            "margin": "md",
+            "flex": 0
+          }
+        ]
+      },
+      {
+        "type": "box",
+        "layout": "vertical",
+        "margin": "lg",
+        "spacing": "sm",
+        "contents": [
+          {
+            "type": "box",
+            "layout": "baseline",
+            "spacing": "sm",
+            "contents": [
+              {
+                "type": "text",
+                "text": "Place",
+                "color": "#aaaaaa",
+                "size": "sm",
+                "flex": 1
+              },
+              {
+                "type": "text",
+                "text": "Flex Tower, 7-7-4 Midori-ku, Tokyo",
+                "wrap": true,
+                "color": "#666666",
+                "size": "sm",
+                "flex": 5
+              }
+            ]
+          },
+          {
+            "type": "box",
+            "layout": "baseline",
+            "spacing": "sm",
+            "contents": [
+              {
+                "type": "text",
+                "text": "Time",
+                "color": "#aaaaaa",
+                "size": "sm",
+                "flex": 1
+              },
+              {
+                "type": "text",
+                "text": "10:00 - 23:00",
+                "wrap": true,
+                "color": "#666666",
+                "size": "sm",
+                "flex": 5
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "footer": {
+    "type": "box",
+    "layout": "vertical",
+    "spacing": "sm",
+    "contents": [
+      {
+        "type": "button",
+        "style": "link",
+        "height": "sm",
+        "action": {
+          "type": "uri",
+          "label": "CALL",
+          "uri": "https://line.me/"
+        }
+      },
+      {
+        "type": "button",
+        "style": "link",
+        "height": "sm",
+        "action": {
+          "type": "uri",
+          "label": "WEBSITE",
+          "uri": "https://line.me/"
+        }
+      },
+      {
+        "type": "box",
+        "layout": "vertical",
+        "contents": [],
+        "margin": "sm"
+      }
+    ],
+    "flex": 0
+  }
+}
+
+    // =====================================
+    // ★ 5. 分享功能
+    // =====================================
+
+    async function shareCard(title, description, imageUrl) {
+      if (!liff.isLoggedIn()) {
+        setStatus("請先登入 LINE");
+        return;
+      }
+
+      if (!liff.isApiAvailable("shareTargetPicker")) {
+        setStatus(
+          "目前環境不支援好友分享，" +
+          "請使用手機 LINE 開啟 LIFF 網頁。"
+        );
+        return;
+      }
+
+      setShareEnabled(false);
       setStatus("正在開啟 LINE 好友選擇畫面...");
 
       try {
-
-        const message = getFlexMessage();
+        const message = createFlexMessage(
+          title,
+          description,
+          imageUrl
+        );
 
         const result = await liff.shareTargetPicker(
           [message],
-          {
-            isMultiple: true
-          }
+          { isMultiple: true }
         );
 
-        if (result && result.status === "success") {
-          setStatus("電子名片分享成功！");
+        if (result) {
+          setStatus("分享已完成！");
         } else {
-          setStatus("已取消分享或未取得傳送確認");
+          setStatus("已取消分享，或未取得傳送確認");
         }
 
       } catch (error) {
         console.error(error);
-        setStatus("分享失敗：" + error.message);
+        setStatus(
+          "分享失敗：" +
+          (error.message || String(error))
+        );
       } finally {
-        shareBtn.disabled = false;
+        setShareEnabled(true);
       }
     }
 
-    shareBtn.addEventListener(
-      "click",
-      shareBusinessCard
+    // =====================================
+    // ★ 6. 原始三個分享按鈕
+    // =====================================
+
+    function sendShare_Gift() {
+      return shareCard(
+        "IZO 健康好禮",
+        "把健康祝福分享給你的 LINE 好友！",
+        CONFIG.imageBase +
+          "/1040x520/06c755/ffffff.png?text=IZO+Gift"
+      );
+    }
+
+    function sendShare_Ladder() {
+      return shareCard(
+        "IZO 健康應援活動",
+        "邀請好友一起參加健康互動活動！",
+        CONFIG.imageBase +
+          "/1040x520/218ec9/ffffff.png?text=IZO+Event"
+      );
+    }
+
+    function sendShare_Pay() {
+      return shareCard(
+        "IZO 專屬健康方案",
+        "了解 IZO 預防醫學與健康管理服務。",
+        CONFIG.imageBase +
+          "/1040x520/22374c/ffffff.png?text=IZO+Plan"
+      );
+    }
+
+    // =====================================
+    // ★ 7. 綁定按鈕事件
+    // =====================================
+
+    $("btnShare").addEventListener(
+      "click", sendShare_Gift
     );
 
+    $("btnShare2").addEventListener(
+      "click", sendShare_Ladder
+    );
+
+    $("btnShare3").addEventListener(
+      "click", sendShare_Pay
+    );
+
+    $("btnLogin").addEventListener(
+      "click", login
+    );
+
+    $("btnLogOut").addEventListener(
+      "click", logOut
+    );
+
+    // 網頁開啟時自動執行
     initializeLiff();
 
   </script>
